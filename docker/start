@@ -5,7 +5,7 @@ if [ ! -z "$WWWUSER" ]; then
 fi
 
 if [ ! -d /.composer ]; then
-    sed -i "s/user\ \=.*/user\ \= $WWWUSER/g" /etc/php/7.3/fpm/pool.d/www.conf
+    sed -i "s/user\ \=.*/user\ \= $WWWUSER/g" /etc/php/8.2/fpm/pool.d/www.conf
 
     mkdir /.composer
 fi

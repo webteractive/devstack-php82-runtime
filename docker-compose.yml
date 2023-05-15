@@ -6,13 +6,13 @@ services:
     command:
       - "--api.insecure=true"
       - "--providers.docker=true"
-      - "--providers.docker.network=php73"
+      - "--providers.docker.network=php82"
       - "--providers.docker.exposedByDefault=false"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--entrypoints.ws.address=:6002"
     networks:
-      - php73
+      - php82
     ports:
       - "80:80"
       - "8080:8080"
@@ -26,20 +26,20 @@ services:
       dockerfile: Dockerfile
       args:
         WWWGROUP: "${WWWGROUP:-1000}"
-    image: devstack/php73
+    image: devstack/php82
     environment:
       WWWUSER: "${WWWUSER:-1000}"
     volumes:
       - '.:/var/www/html'
     networks:
-      - php73
+      - php82
     depends_on:
       - mysql
       - redis
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.app.rule=Host(`php73.localhost`)"
-      - "traefik.docker.network=php73"
+      - "traefik.http.routers.app.rule=Host(`php82.localhost`)"
+      - "traefik.docker.network=php82"
   # Databases
   mysql:
     image: "mysql/mysql-server:8.0"
@@ -47,35 +47,35 @@ services:
     ports:
         - '${APP_FORWARD_DB_PORT:-3306}:3306'
     environment:
-        MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+        MYSQL_ROOT_PASSWORD: '${DB_PASSWORD:-password}'
         MYSQL_ROOT_HOST: "%"
-        MYSQL_DATABASE: '${DB_DATABASE}'
-        MYSQL_USER: '${DB_USERNAME}'
-        MYSQL_PASSWORD: '${DB_PASSWORD}'
+        MYSQL_DATABASE: '${DB_DATABASE:-example}'
+        MYSQL_USER: '${DB_USERNAME:-user}'
+        MYSQL_PASSWORD: '${DB_PASSWORD:-password}'
         MYSQL_ALLOW_EMPTY_PASSWORD: 1
     volumes:
-      - "php73-mysql:/var/lib/mysql"
+      - "php82-mysql:/var/lib/mysql"
     networks:
-      - php73
+      - php82
   redis:
     image: "redis:alpine"
     ports:
       - "${FORWARD_REDIS_PORT:-6379}:6379"
     volumes:
-      - "php73-redis:/data"
+      - "php82-redis:/data"
     networks:
-      - php73
+      - php82
   memcached:
     image: "memcached:alpine"
     ports:
       - "11211:11211"
     networks:
-      - php73
+      - php82
 networks:
-  php73:
+  php82:
     driver: bridge
 volumes:
-  php73-mysql:
+  php82-mysql:
     driver: local
-  php73-redis:
+  php82-redis:
     driver: local

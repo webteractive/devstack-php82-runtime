@@ -1,4 +1,3 @@
-devstack: true
 version: "3"
 services:
   # Proxy (Don't touch this!)
